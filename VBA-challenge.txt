@@ -1,0 +1,62 @@
+Sub VBAChallenge():
+        For Each ws In Worksheets
+        Dim i, sum_row, count, end_row As Long
+        Dim stock_vol, Increase, Vol, Decrease As Double
+        end_row = ws.Cells(Rows.count, 1).End(xlUp).Row
+        count = 2
+        sum_row = 2
+        Vol = 0
+        Increase = 0
+        Decrease = 0
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Yearly Change"
+        ws.Cells(1, 11).Value = "Percent Change"
+        ws.Cells(1, 12).Value = "Total Stock Volume"
+        ws.Cells(2, 15).Value = "Greatest % Increase"
+        ws.Cells(3, 15).Value = "Greatest % Decrease"
+        ws.Cells(4, 15).Value = "Greatest Total Volume"
+        ws.Cells(1, 16).Value = "Ticker"
+        ws.Cells(1, 17).Value = "Value"
+        For i = 2 To end_row
+            If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+                    ws.Cells(count, 9).Value = ws.Cells(i, 1).Value
+                    closing = ws.Cells(i, 6).Value
+                    opening = ws.Cells(sum_row, 3).Value
+                    ws.Cells(count, 10).Value = closing - opening 'yearly change
+                        If ws.Cells(count, 10).Value > 0 Then
+                        ws.Cells(count, 10).Interior.ColorIndex = 4
+                        Else
+                        ws.Cells(count, 10).Interior.ColorIndex = 3
+                        End If
+                ws.Cells(count, 11).Value = ((ws.Cells(i, 6).Value - ws.Cells(sum_row, 3).Value) / ws.Cells(sum_row, 3).Value) 'percent change
+                stock_vol = 0
+                For k = sum_row To i
+                    stock_vol = stock_vol + ws.Cells(k, 7).Value
+                Next k
+                ws.Cells(count, 12).Value = stock_vol
+                count = count + 1
+                sum_row = i + 1
+                End If
+        Next i
+        For p = 2 To end_row
+             If ws.Cells(p, 12).Value > Vol Then
+                Vol = ws.Cells(p, 12).Value
+                ws.Cells(4, 17).Value = Vol
+                ws.Cells(4, 16).Value = ws.Cells(p, 9).Value
+            End If
+            If ws.Cells(p, 11).Value > Increase Then
+                Increase = ws.Cells(p, 11).Value
+                ws.Cells(2, 17).Value = Increase
+                ws.Cells(2, 16).Value = ws.Cells(p, 9).Value
+            End If
+             If ws.Cells(p, 11).Value < Decrease Then
+                Decrease = ws.Cells(p, 11).Value
+                ws.Cells(3, 17).Value = Decrease
+                ws.Cells(3, 16).Value = ws.Cells(p, 9).Value
+            End If
+        Next p
+  Next ws
+End Sub
+
+
+
